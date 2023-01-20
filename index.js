@@ -54,37 +54,32 @@ app.post("/SignUp", (req, res) => {
 app.post("/chat/:user", (req, res) => {
     if (req.body) {
         let userQ = req.params.user
-        let index = user.findIndex((u) => u.user === userQ);
-        if (index != -1) {
-            let nameUser = req.body.user.user;
-            let passwordUser = req.body.user.password;
-            let index = user.findIndex((u) => u.user === nameUser);
+        let nameUser = req.body.user.user;
+        let passwordUser = req.body.user.password;
+        let index = user.findIndex((u) => u.user === nameUser);
 
-            if (user[index].password === passwordUser) {
-                let chatE = chat.findIndex((c) => ((c.participante[0] == nameUser || c.participante[0] == userQ) && (c.participante[1] == nameUser || c.participante[1] == userQ)));
+        if (user[index].password === passwordUser) {
+            let chatE = chat.findIndex((c) => ((c.participante[0] == nameUser || c.participante[0] == userQ) && (c.participante[1] == nameUser || c.participante[1] == userQ)));
 
-                if (chatE != -1) {
-                    newMensaje = [req.body.mensaje, nameUser, chat[chatE].mensajes.length];
-                    chat[chatE].mensajes.push(newMensaje);
-                    res.json(chat[chatE]);
-                    console.log(chatE);
-                } else {
-                    let newChat = {
-                        estado: true,
-                        participante: [nameUser, userQ],
-                        mensajes: []
-                    }
-                    newMensaje = [req.body.mensaje, nameUser, 0];
-                    newChat.mensajes.push(newMensaje);
-                    chat.push(newChat);
-                    res.json(newChat);
-                    console.log(chatE);
-                }
+            if (chatE != -1) {
+                newMensaje = [req.body.mensaje, nameUser, chat[chatE].mensajes.length];
+                chat[chatE].mensajes.push(newMensaje);
+                res.json(chat[chatE]);
+                console.log(chatE);
             } else {
-                res.status(404).json(null);
+                let newChat = {
+                    estado: true,
+                    participante: [nameUser, userQ],
+                    mensajes: []
+                }
+                newMensaje = [req.body.mensaje, nameUser, 0];
+                newChat.mensajes.push(newMensaje);
+                chat.push(newChat);
+                res.json(newChat);
+                console.log(chatE);
             }
         } else {
-            res.status(401);
+            res.status(404).json(null);
         }
     } else {
         res.status(401)
@@ -101,7 +96,7 @@ app.get("/chat", (req, res) => {
 
         if (user[index].password === passwordUser) {
             let jsonData = []
-            chat.forEach((c) => {if((c.participante[0] == nameUser || c.participante[1] == nameUser)){ jsonData.push([c.participante, c.mensajes[c.mensajes.length - 1]])}})
+            chat.forEach((c) => { if ((c.participante[0] == nameUser || c.participante[1] == nameUser)) { jsonData.push([c.participante, c.mensajes[c.mensajes.length - 1]]) } })
             console.log(jsonData);
             res.json(jsonData);
         } else {
@@ -115,4 +110,5 @@ app.get("/chat", (req, res) => {
 });
 
 app.listen(puerto);
+console.log("server in port " + puerto);
 console.log("server in port " + puerto);
